@@ -10,19 +10,21 @@ from loguru import logger
 from mage_ai.data_preparation.shared.secrets import get_secret_value
 from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_fixed
 
-from langfuse.utils import constants
+from langfuse_analytics_collection.utils import constants
 
 BASE_URL = "https://cloud.langfuse.com/api/public"
 
-secret_name = constants.config_mapper["secret_name"]
+secret_name = constants.CONFIG_MAPPER["secret_name"]
 try:
     credentials = get_secret_value(secret_name)
 except AttributeError:
     # this happens when running this as a script (not in mage) on a local machine)
     dotenv.load_dotenv()
     credentials = os.getenv(secret_name)
+    assert credentials is not None, f"Credentials for {secret_name} not found"
 
 attempt_count = 5
+
 
 def get_retry_after(response):
     """
@@ -40,10 +42,10 @@ def get_retry_after(response):
 
 def wait_time(retry_state):
     """
-    Returns the primary wait time, checking if status_code == 429. 
+    Returns the primary wait time, checking if status_code == 429.
     Uses the 'Retry-After' header if available. Otherwise, defaults to 1 second.
     """
-    default_wait = 5 # seconds
+    default_wait = 5  # seconds
     if (
         hasattr(retry_state.outcome, "exception")
         and hasattr(retry_state.outcome.exception(), "response")
@@ -59,7 +61,6 @@ def wait_time(retry_state):
     return wait_fixed(val)(retry_state)
 
 
-
 def log_before_sleep(retry_state):
     """
     Logs a warning message before sleeping in a retry attempt.
@@ -69,11 +70,12 @@ def log_before_sleep(retry_state):
         f"Waiting {retry_state.next_action.sleep if retry_state.next_action else 'unknown'} seconds before retry. "
     )
 
+
 @retry(
     stop=stop_after_attempt(attempt_count),
     wait=wait_time,
     retry=retry_if_exception_type(requests.exceptions.RequestException),
-    before_sleep=log_before_sleep
+    before_sleep=log_before_sleep,
 )
 def make_request(url, headers, params):
     """
@@ -91,13 +93,10 @@ def make_request(url, headers, params):
 def fetch_all_pages(path: str, days_back: int, params: dict[str, Any] | None = None):
     """
     Fetches the data for multiple pages, up to the limit imposed by the given path,
-    starting from 'days_back' days ago until now (UTC). 
+    starting from 'days_back' days ago until now (UTC).
     Returns a list combining all pages of data.
     """
-    headers = {
-        "Authorization": f"Basic {b64encode(credentials.encode()).decode()}",
-        "Content-Type": "application/json"
-    }
+    headers = {"Authorization": f"Basic {b64encode(credentials.encode()).decode()}", "Content-Type": "application/json"}
 
     start_date = datetime.now(timezone.utc) - timedelta(days=days_back)
     if params is None:
