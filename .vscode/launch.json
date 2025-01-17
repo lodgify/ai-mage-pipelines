@@ -2,10 +2,21 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "upload_langfuse_scores.py",
+            "name": "load_scores.py",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/langfuse/data_exporters/upload_langfuse_scores.py",
+            "program": "${workspaceFolder}/langfuse/data_loaders/load_scores.py",  // Updated path
+            "cwd": "${workspaceFolder}",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "upload_scores.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/langfuse/data_exporters/upload_scores.py",
             "cwd": "${workspaceFolder}",
             "justMyCode": true
             ,
@@ -14,15 +25,26 @@
             }
         },
         {
-            "name": "get_scores.py",
+            "name": "load_traces.py",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/langfuse/data_loaders/get_scores.py",  // Updated path
+            "program": "${workspaceFolder}/langfuse/data_loaders/load_traces.py",
             "cwd": "${workspaceFolder}",
             "justMyCode": true,
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
             }
-        }
+        },        {
+            "name": "upload_traces.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/langfuse/data_exporters/upload_traces.py",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+
     ]
 }

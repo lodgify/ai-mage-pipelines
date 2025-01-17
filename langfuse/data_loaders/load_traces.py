@@ -11,7 +11,7 @@ if 'test' not in globals():
 
 
 @data_loader
-def load_langfuse_traces(*args, **kwargs):
+def load_traces(*args, **kwargs):
     """
     Template for loading data from API
     """
@@ -43,3 +43,8 @@ def test_output(output, *args) -> None:
     Template code for testing the output of the block.
     """
     assert output is not None, 'The output is undefined'
+
+if __name__ == "__main__":
+    traces_df = load_traces()
+    traces_df.to_pickle('traces.pkl')
+    print(traces_df)

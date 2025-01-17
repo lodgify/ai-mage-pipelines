@@ -1,3 +1,13 @@
+from mage_ai.settings.repo import get_repo_path
+from os import path
+import os
+import dotenv
+
+dotenv.load_dotenv()
+
+# getting local_project_name for local script testing
+repo_path = path.join(get_repo_path(), os.environ.get("local_project_name", ""))
+
 days_back = 1
 
 config_mapper = {
