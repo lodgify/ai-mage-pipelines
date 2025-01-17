@@ -10,8 +10,8 @@ setup: ## Check that uv is installed
 	@uv --version || echo 'Please install uv: https://docs.astral.sh/uv/getting-started/installation/'
 	uv sync --all-groups
 
-.PHONY: start-mage
-start-mage:
+.PHONY: run-mage
+run-mage: ## Run mage
 	uv run mage start langfuse_analytics_collection
 
 .PHONY: lint
