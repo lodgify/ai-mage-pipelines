@@ -1,7 +1,5 @@
 import json
 import pandas as pd
-from datetime import datetime, timedelta
-from mage_ai.data_preparation.shared.secrets import get_secret_value
 
 from langfuse.utils import utils, constants
 if 'data_loader' not in globals():
@@ -12,9 +10,6 @@ if 'test' not in globals():
 
 @data_loader
 def load_traces(*args, **kwargs):
-    """
-    Template for loading data from API
-    """
     traces_data = utils.fetch_all_pages("traces", constants.days_back)
 
     traces_dicts = [{

@@ -1,5 +1,6 @@
 from base64 import b64encode
 from datetime import timedelta, datetime, timezone
+from typing import Any
 import requests
 from mage_ai.data_preparation.shared.secrets import get_secret_value
 from langfuse.utils import constants
@@ -15,19 +16,19 @@ except AttributeError:
     dotenv.load_dotenv()
     credentials = os.getenv(secret_name)
 
-def fetch_all_pages(path: str, days_back: int):
+def fetch_all_pages(path: str, days_back: int, params: dict[str, Any] | None = None):
     headers = {
         "Authorization": f"Basic {b64encode(credentials.encode()).decode()}",
         "Content-Type": "application/json"
     }
 
-    all_data = []
     start_date = datetime.now(timezone.utc) - timedelta(days=days_back)
-    params = {
-        'fromTimestamp': start_date.strftime('%Y-%m-%dT00:00:00Z'),
-        'limit': 100 # it does not allow a higher limit
-    }
+    if params is None:
+        params = {}
+    params['fromTimestamp'] = start_date.strftime('%Y-%m-%dT00:00:00Z')
+    params['limit'] = 100 # it does not allow a higher limit
     page = 1
+    all_data = []
     while True:
         params['page'] = page
         print(f"Fetching page {page}")

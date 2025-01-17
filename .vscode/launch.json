@@ -34,7 +34,8 @@
             "env": {
                 "PYTHONPATH": "${workspaceFolder}"
             }
-        },        {
+        },
+        {
             "name": "upload_traces.py",
             "type": "debugpy",
             "request": "launch",
@@ -45,6 +46,16 @@
                 "PYTHONPATH": "${workspaceFolder}"
             }
         },
-
+        {
+            "name": "load_observations.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/langfuse/data_loaders/load_observations.py",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
     ]
 }
