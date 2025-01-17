@@ -1,7 +1,8 @@
-from mage_ai.settings.repo import get_repo_path
-from os import path
 import os
+from os import path
+
 import dotenv
+from mage_ai.settings.repo import get_repo_path
 
 dotenv.load_dotenv()
 

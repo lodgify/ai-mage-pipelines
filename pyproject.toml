@@ -9,4 +9,80 @@ dependencies = [
     "psycopg2-binary",
     "sshtunnel",
     "python-dotenv",
+    "loguru",
+        "ruff~=0.8.6",
+    "mypy[faster-cache]~=1.14.1",
 ]
+codecheck = [
+    "ruff~=0.8.6",
+    "mypy[faster-cache]~=1.14.1",
+]
+[tool.ruff]
+line-length = 120
+src = ["langfuse"]
+include = ["langfuse/data_loaders/**", "langfuse/data_exporters/**", "langfuse/utils/**"]
+
+exclude = ["src/experiments"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "D", # Missing docstring in public module
+    "SIM112", 
+    "ARG001", 
+    "ANN201", 
+    "ANN001", 
+    "S301",
+    "EXE002",
+    "PTH118",
+    "ERA001", # commented out code
+    "PLR2004", 
+    "ANN002", # Missing type annotation for *args
+    "ANN003", # Missing type annotation for **kwargs
+    "ANN401", # Dynamically typed expressions (typing.Any) are disallowed in value
+    "BLE001",# Do not catch blind exception: Exception
+    "C401",	# Unnecessary generator (rewrite as a set comprehension)
+    "C901", # Function is too complex (>10)
+    "COM812", # These rules may cause conflicts when used with formatter
+    "D200", # One-line docstring should fit on one line
+    "D203", # one-blank-line-before-class (D203) and no-blank-line-before-class (D211) are incompatible. Ignoring one-blank-line-before-class.
+    "D205", # 1 blank line required between summary line and description
+    "D213", # multi-line-summary-first-line (D212) and multi-line-summary-second-line (D213) are incompatible. Ignoring multi-line-summary-second-line
+    "D400", # First line should end with a period
+    "D401", # First line should be in imperative mood
+    "D404", # First word of docstring rules
+    "D415", # First line should end with a period, question mark, or exclamation point
+    "E501", # Line length, formatted by black
+    "EM101", # Exception must not use a string literal
+    "EM102", # Exception must not use an f-string literal, assign to variable first
+    "FBT001", # Boolean-typed positional argument in function definition
+    "FBT002", # Boolean default positional argument in function definition
+    "FIX002", # Line contains todo
+    "G004", # Logging statement uses f-string
+    "ISC001", # These rules may cause conflicts when used with formatter
+    "N818", # Exception name should be named with an Error suffix
+    "PERF401", # Use an async list comprehension to create a transformed list
+    "PIE810", # Call startswith once with a tuple
+    "PLR0913", # Too many arguments in function definition (> 5)
+    "PLR0915", # Too many statements (> 50)
+    "RET504", # Unnecessary assignment to response before return statement
+    "RUF001", # ambiguous character string: String contains ambiguous г (CYRILLIC SMALL LETTER GHE). Did you mean r (LATIN SMALL LETTER R)?
+    "RUF002", # Docstring contains ambiguous С .....
+    "RUF003", # ambiguous comment string: Comment contains ambiguous ...
+    "S101", # S101 Use of assert detected. https://stackoverflow.com/a/68429294
+    "S701", # By default, jinja2 sets `autoescape` to `False`. Consider using `autoescape=True` or the `select_autoescape` function to mitigate XSS vulnerabilities.
+    "SIM110", # Use return all(detector.detect_language_of(text) == language_to_check for text in texts) instead of for loop
+    "SLF001", # Private member accessed: _r
+    "TC001", # Checks for first-party imports that are only used for type annotations, but aren't defined in a type-checking block.
+    "TC002", # Move third-party import {} into a type-checking block
+    "TC003", # Move standard library import {} into a type-checking block
+    "TD002", # Missing author in todo
+    "TD003", # Missing issue link in todo
+    "TRY003", # Avoid specifying long messages outside the exception class
+    "TRY004", # Avoid specifying long messages outside the exception class
+    "TRY300" # Consider moving this statement to an else block
+]
+[tool.mypy]
+files = ["langfuse/data_loaders", "langfuse/data_exporters", "langfuse/utils"]
+show_absolute_path = true
+check_untyped_defs = true
