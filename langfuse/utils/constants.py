@@ -5,10 +5,10 @@ import dotenv
 
 dotenv.load_dotenv()
 
+days_back = 1
+
 # getting local_project_name for local script testing
 repo_path = path.join(get_repo_path(), os.environ.get("local_project_name", ""))
-
-days_back = 1
 
 config_mapper = {
     #"ai_assistant_internal_platform_live"

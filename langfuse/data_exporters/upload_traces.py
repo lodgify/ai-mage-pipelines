@@ -48,6 +48,7 @@ def export_data_to_postgres(data, **kwargs) -> None:
         print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
+    print("running __main__")
     import pandas as pd
     data = pd.read_pickle('traces.pkl')
     export_data_to_postgres(data)

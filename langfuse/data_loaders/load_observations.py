@@ -1,5 +1,6 @@
 import json
 import pandas as pd
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from langfuse.utils import utils, constants
 if 'data_loader' not in globals():
@@ -8,52 +9,63 @@ if 'test' not in globals():
     from mage_ai.data_preparation.decorators import test
 
 
+def fetch_observations_for_trace(trace_id):
+    params = {
+        'traceId': trace_id,
+    }
+    observations_data = utils.fetch_all_pages("observations", constants.days_back, params)
+    
+    return [{
+        'Id': observation['id'],
+        'TraceId': trace_id,
+        'Type': observation['type'],
+        'Name': observation.get('name'),
+        'StartTime': observation['startTime'],
+        'EndTime': observation.get('endTime'),
+        'CompletionStartTime': observation.get('completionStartTime'),
+        'Model': observation.get('model'),
+        'ModelParameters': json.dumps(observation.get('modelParameters')),
+        'Input': json.dumps(observation.get('input')),
+        'Version': observation.get('version'),
+        'Metadata': json.dumps(observation.get('metadata')),
+        'Output': json.dumps(observation.get('output')),
+        'Usage': json.dumps(observation.get('usage')),
+        'Level': observation['level'],
+        'StatusMessage': observation.get('statusMessage'),
+        'ParentObservationId': observation.get('parentObservationId'),
+        'PromptId': observation.get('promptId'),
+        'ModelId': observation.get('modelId'),
+        'InputPrice': observation.get('inputPrice'),
+        'OutputPrice': observation.get('outputPrice'),
+        'TotalPrice': observation.get('totalPrice'),
+        'CalculatedInputCost': observation.get('calculatedInputCost'),
+        'CalculatedOutputCost': observation.get('calculatedOutputCost'),
+        'CalculatedTotalCost': observation.get('calculatedTotalCost'),
+        'Latency': observation.get('latency')
+    } for observation in observations_data]
+
 @data_loader
 def load_observations(data: pd.DataFrame, *args, **kwargs):
     if data.empty:
         print("Not loading observations, no traces found.")
         return pd.DataFrame()
     
-    observations_dfs = []
+    observations = []
+    trace_ids = data['Id'].tolist()
     
-    for trace_id in data['Id'].tolist():
-        params = {
-            'traceId': trace_id,
-        }
-        observations_data = utils.fetch_all_pages("observations", constants.days_back, params)
+    # we need to parallelize fetching so that it is not too slow. The reason is that 
+    # we can only fetch observations for a trace at a time (ie, not all the observations for all the traces at once)
+    # not too high to respect API limits: https://langfuse.com/faq/all/api-limits
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        future_to_trace = {executor.submit(fetch_observations_for_trace, trace_id): trace_id 
+                          for trace_id in trace_ids}
         
-        trace_obs_dicts = [{
-            'Id': observation['id'],
-            'TraceId': trace_id,  # Use trace_id from the outer loop
-            'Type': observation['type'],
-            'Name': observation.get('name'),
-            'StartTime': observation['startTime'],
-            'EndTime': observation.get('endTime'),
-            'CompletionStartTime': observation.get('completionStartTime'),
-            'Model': observation.get('model'),
-            'ModelParameters': json.dumps(observation.get('modelParameters')),
-            'Input': json.dumps(observation.get('input')),
-            'Version': observation.get('version'),
-            'Metadata': json.dumps(observation.get('metadata')),
-            'Output': json.dumps(observation.get('output')),
-            'Usage': json.dumps(observation.get('usage')),
-            'Level': observation['level'],
-            'StatusMessage': observation.get('statusMessage'),
-            'ParentObservationId': observation.get('parentObservationId'),
-            'PromptId': observation.get('promptId'),
-            'ModelId': observation.get('modelId'),
-            'InputPrice': observation.get('inputPrice'),
-            'OutputPrice': observation.get('outputPrice'),
-            'TotalPrice': observation.get('totalPrice'),
-            'CalculatedInputCost': observation.get('calculatedInputCost'),
-            'CalculatedOutputCost': observation.get('calculatedOutputCost'),
-            'CalculatedTotalCost': observation.get('calculatedTotalCost'),
-            'Latency': observation.get('latency')
-        } for observation in observations_data]
+        for future in as_completed(future_to_trace):
+            trace_obs_dicts = future.result()
+            if trace_obs_dicts:
+                observations.extend(trace_obs_dicts)
 
-        observations_dfs.append(pd.DataFrame(trace_obs_dicts))
-
-    return pd.concat(observations_dfs) if observations_dfs else pd.DataFrame()   
+    return pd.DataFrame(observations) if observations else pd.DataFrame()
 
 
 @test
@@ -64,6 +76,7 @@ def test_output(output, *args) -> None:
     assert output is not None, 'The output is undefined'
 
 if __name__ == "__main__":
+    print("running __main__")
     traces_df = pd.read_pickle('traces.pkl')
     observations_df = load_observations(traces_df)
     observations_df.to_pickle('observations.pkl')

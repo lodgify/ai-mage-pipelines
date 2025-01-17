@@ -32,6 +32,7 @@ def test_output(output, *args) -> None:
 
 
 if __name__ == "__main__":
+    print("running __main__")
     scores_df = load_scores()
     scores_df.to_pickle('scores.pkl')
     print(scores_df)

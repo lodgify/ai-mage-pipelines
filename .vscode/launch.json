@@ -57,5 +57,16 @@
                 "PYTHONPATH": "${workspaceFolder}"
             }
         },
+        {
+            "name": "upload_observations.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/langfuse/data_exporters/upload_observations.py",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        }
     ]
 }

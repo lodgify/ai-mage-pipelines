@@ -26,7 +26,7 @@ def fetch_all_pages(path: str, days_back: int, params: dict[str, Any] | None = N
     if params is None:
         params = {}
     params['fromTimestamp'] = start_date.strftime('%Y-%m-%dT00:00:00Z')
-    params['limit'] = 100 # it does not allow a higher limit
+    params['limit'] = 100 # API does not allow a higher limit (tried via experimentation)
     page = 1
     all_data = []
     while True:

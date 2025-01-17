@@ -1,5 +1,5 @@
 from langfuse.utils import constants
-from mage_ai.settings.repo import get_repo_path
+
 from mage_ai.io.config import ConfigFileLoader
 from mage_ai.io.postgres import Postgres
 from os import path
@@ -27,12 +27,12 @@ def export_data_to_postgres(data, **kwargs) -> None:
         print("Extracted config_profile:", config_profile)
 
         schema_name = 'public'  # Specify the name of the schema to export data to
-        table_name = '"LangfuseScores"'  # Specify the name of the table to export data to
-        config_path = path.join(get_repo_path(), 'io_config.yaml')
+        table_name = '"LangfuseObservations"'  # Specify the name of the table to export data to
+        
         
         print(f"{data.shape=}")
         if data is not None and not data.empty:
-            with Postgres.with_config(ConfigFileLoader(config_path, config_profile)) as loader:
+            with Postgres.with_config(ConfigFileLoader(path.join(constants.repo_path, 'io_config.yaml'), config_profile)) as loader:
                 loader.export(
                     data,
                     schema_name,
@@ -50,5 +50,5 @@ def export_data_to_postgres(data, **kwargs) -> None:
 if __name__ == "__main__":
     print("running __main__")
     import pandas as pd
-    data = pd.read_pickle('scores.pkl')
+    data = pd.read_pickle('observations.pkl')
     export_data_to_postgres(data)

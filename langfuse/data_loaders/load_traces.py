@@ -40,6 +40,7 @@ def test_output(output, *args) -> None:
     assert output is not None, 'The output is undefined'
 
 if __name__ == "__main__":
+    print("running __main__")
     traces_df = load_traces()
     traces_df.to_pickle('traces.pkl')
     print(traces_df)
