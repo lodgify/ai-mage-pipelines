@@ -86,7 +86,7 @@ blocks:
   upstream_blocks:
   - load_traces
   uuid: load_observations
-- all_upstream_blocks_executed: false
+- all_upstream_blocks_executed: true
   color: null
   configuration:
     file_path: data_exporters/upload_observations.py

@@ -9,9 +9,12 @@ dependencies = [
     "psycopg2-binary",
     "sshtunnel",
     "python-dotenv",
+    "tenacity",
     "loguru",
-        "ruff~=0.8.6",
+    # need to move 
+    "ruff~=0.8.6",
     "mypy[faster-cache]~=1.14.1",
+
 ]
 codecheck = [
     "ruff~=0.8.6",
@@ -28,6 +31,7 @@ exclude = ["src/experiments"]
 select = ["ALL"]
 ignore = [
     "D", # Missing docstring in public module
+    "PERF203", # try except in a loop
     "SIM112", 
     "ARG001", 
     "ANN201", 

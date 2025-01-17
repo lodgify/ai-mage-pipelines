@@ -64,9 +64,14 @@ def load_observations(data: pd.DataFrame, *args, **kwargs):
                           for trace_id in trace_ids}
 
         for future in as_completed(future_to_trace):
-            trace_obs_dicts = future.result()
-            if trace_obs_dicts:
-                observations.extend(trace_obs_dicts)
+            try:
+                trace_obs_dicts = future.result()
+                if trace_obs_dicts:
+                    observations.extend(trace_obs_dicts)
+            except Exception:
+                trace_id = future_to_trace[future]
+                logger.exception(f"Error processing trace {trace_id}")
+                raise  # Re-raise the exception after logging
 
     return pd.DataFrame(observations) if observations else pd.DataFrame()
 
