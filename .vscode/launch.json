@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "upload_langfuse_scores.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/langfuse/data_exporters/upload_langfuse_scores.py",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": true
+            ,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "get_scores.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/langfuse/data_loaders/get_scores.py",  // Updated path
+            "cwd": "${workspaceFolder}",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        }
+    ]
+}

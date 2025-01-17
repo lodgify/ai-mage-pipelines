@@ -1,0 +1,12 @@
+[project]
+name = "mage-pipelines"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = "==3.10.15" # like in https://mage-dev.lodgify.net/
+dependencies = [
+    "mage-ai==0.9.74",
+    "psycopg2-binary",
+    "sshtunnel",
+    "python-dotenv",
+]
