@@ -10,7 +10,7 @@ from lodgify.utils.ai_assistant import constants
 
 
 def export_data(data: pd.DataFrame, schema_name: str, table_name: str):
-    logger.debug(f"Type of data: {type(data)}")
+    logger.debug(f"Size of data: {data.shape=}")
 
     try:
         config_profile = constants.get_config_mapper()["io_config_profile_name"]
