@@ -12,7 +12,7 @@ def export_data_to_postgres(data, **kwargs) -> None:
 
 
 if __name__ == "__main__":
-    logger.info("running __main__")
+    logger.debug("running __main__")
     import pandas as pd
 
     data = pd.read_pickle("traces.pkl")

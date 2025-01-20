@@ -13,7 +13,7 @@ if "test" not in globals():
 
 @data_loader
 def load_traces(*args, **kwargs):
-    traces_data = utils_langfuse.fetch_all_pages("traces", constants.DAYS_BACK)
+    traces_data = utils_langfuse.fetch_all_pages("traces", constants.DAYS_BACK, kwargs)
 
     traces_dicts = [
         {
@@ -45,7 +45,7 @@ def test_output(output, *args) -> None:
 
 
 if __name__ == "__main__":
-    logger.info("running __main__")
+    logger.debug("running __main__")
     traces_df = load_traces()
     traces_df.to_pickle("traces.pkl")
-    logger.info(traces_df)
+    logger.debug(traces_df)

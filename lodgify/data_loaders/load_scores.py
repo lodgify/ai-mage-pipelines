@@ -11,7 +11,7 @@ if "test" not in globals():
 
 @data_loader
 def load_scores(*args, **kwargs):
-    scores_data = utils_langfuse.fetch_all_pages("scores", constants.DAYS_BACK)
+    scores_data = utils_langfuse.fetch_all_pages("scores", constants.DAYS_BACK, kwargs)
     scores_dicts = [
         {
             "Id": score["id"],
@@ -36,7 +36,7 @@ def test_output(output, *args) -> None:
 
 
 if __name__ == "__main__":
-    logger.info("running __main__")
+    logger.debug("running __main__")
     scores_df = load_scores()
     scores_df.to_pickle("scores.pkl")
-    logger.info(scores_df)
+    logger.debug(scores_df)

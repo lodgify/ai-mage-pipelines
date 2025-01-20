@@ -12,11 +12,11 @@ if "test" not in globals():
     from mage_ai.data_preparation.decorators import test
 
 
-def fetch_observations_for_trace(trace_id):
+def fetch_observations_for_trace(trace_id, **kwargs):
     params = {
         "traceId": trace_id,
     }
-    observations_data = utils_langfuse.fetch_all_pages("observations", constants.DAYS_BACK, params)
+    observations_data = utils_langfuse.fetch_all_pages("observations", constants.DAYS_BACK, params, **kwargs)
 
     return [
         {
@@ -54,7 +54,7 @@ def fetch_observations_for_trace(trace_id):
 @data_loader
 def load_observations(data: pd.DataFrame, *args, **kwargs):
     if data.empty:
-        logger.info("Not loading observations, no traces found.")
+        logger.debug("Not loading observations, no traces found.")
         return pd.DataFrame()
 
     observations = []
@@ -64,7 +64,7 @@ def load_observations(data: pd.DataFrame, *args, **kwargs):
     # we can only fetch observations for a trace at a time (ie, not all the observations for all the traces at once)
     # not too high to respect API limits: https://langfuse.com/faq/all/api-limits
     with ThreadPoolExecutor(max_workers=8) as executor:
-        future_to_trace = {executor.submit(fetch_observations_for_trace, trace_id): trace_id for trace_id in trace_ids}
+        future_to_trace = {executor.submit(fetch_observations_for_trace, trace_id, **kwargs): trace_id for trace_id in trace_ids}
 
         for future in as_completed(future_to_trace):
             try:
@@ -86,8 +86,8 @@ def test_output(output, *args) -> None:
 
 
 if __name__ == "__main__":
-    logger.info("running __main__")
+    logger.debug("running __main__")
     traces_df = pd.read_pickle("traces.pkl")
     observations_df = load_observations(traces_df)
     observations_df.to_pickle("observations.pkl")
-    logger.info(observations_df)
+    logger.debug(observations_df)

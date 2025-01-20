@@ -90,7 +90,7 @@ def make_request(url, headers, params):
         raise
 
 
-def fetch_all_pages(path: str, days_back: int, params: dict[str, Any] | None = None):
+def fetch_all_pages(path: str, days_back: int, params: dict[str, Any] | None = None, **kwargs):
     """
     Fetches the data for multiple pages, up to the limit imposed by the given path,
     starting from 'days_back' days ago until now (UTC).
@@ -98,8 +98,14 @@ def fetch_all_pages(path: str, days_back: int, params: dict[str, Any] | None = N
     """
     headers = {"Authorization": f"Basic {b64encode(credentials.encode()).decode()}", "Content-Type": "application/json"}
 
-    start_date = datetime.now(timezone.utc) - timedelta(days=days_back)
-    # execution date
+    # backfill-ready format: https://www.youtube.com/watch?v=V-wUccaafEo&ab_channel=Mage
+    start_date = kwargs.get("execution_date")
+    if start_date is not None:
+        start_date = start_date.date()
+    else:
+        logger.warning("Execution date is not set, using current date (local environment)")
+        start_date = datetime.now(timezone.utc)
+    start_date = start_date - timedelta(days=days_back)
     if params is None:
         params = {}
     params["fromTimestamp"] = start_date.strftime("%Y-%m-%dT00:00:00Z")
@@ -109,7 +115,7 @@ def fetch_all_pages(path: str, days_back: int, params: dict[str, Any] | None = N
     all_data = []
     while True:
         params["page"] = page
-        logger.info(f"Fetching page {page}")
+        logger.debug(f"Fetching page {page}")
         response = make_request(f"{BASE_URL}/{path}", headers, params)
 
         if response.status_code == 200:
@@ -123,5 +129,5 @@ def fetch_all_pages(path: str, days_back: int, params: dict[str, Any] | None = N
             logger.error(f"Error fetching page {page}: {response.status_code} {response.text}")
             response.raise_for_status()
 
-    logger.info(f"Total pages: {page}. Total data: {len(all_data)}")
+    logger.debug(f"Total pages: {page}. Total data: {len(all_data)}")
     return all_data
