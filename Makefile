@@ -12,7 +12,7 @@ setup: ## Check that uv is installed
 
 .PHONY: run-mage
 run-mage: ## Run mage
-	uv run mage start langfuse_analytics_collection
+	MAGE_REPO_PATH=$$(pwd) uv run mage start lodgify
 
 .PHONY: lint
 lint: # Run linting check

@@ -18,8 +18,6 @@ def export_data(data: pd.DataFrame, schema_name: str, table_name: str):
         logger.info(f"Extracted DataFrame: {data}")
         logger.info(f"Extracted config_profile: {config_profile}")
 
-        # schema_name = "public"  # Specify the name of the schema to export data to
-        # table_name = '"LangfuseScores"'  # Specify the name of the table to export data to
         config_path = os.path.join(get_repo_path(), "io_config.yaml")
 
         logger.info(f"{data.shape=}")
@@ -28,7 +26,7 @@ def export_data(data: pd.DataFrame, schema_name: str, table_name: str):
                 loader.export(
                     data,
                     schema_name,
-                    table_name,
+                    f'"{table_name}"',
                     index=False,  # Specifies whether to include index in exported table
                     unique_conflict_method="UPDATE",
                     unique_constraints=["Id"],

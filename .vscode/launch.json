@@ -5,72 +5,72 @@
             "name": "load_scores.py",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/langfuse/data_loaders/load_scores.py",  // Updated path
+            "program": "${workspaceFolder}/lodgify/data_loaders/load_scores.py",  // Updated path
             "cwd": "${workspaceFolder}",
             "justMyCode": true,
             "env": {
                 "PYTHONPATH": "${workspaceFolder}",
-                "MAGE_REPO_PATH": "/Users/denis.ergashbaev/Projects/mage-pipelines/langfuse"
+                "MAGE_REPO_PATH": "/Users/denis.ergashbaev/Projects/ai-mage-pipelines/lodgify"
             }
         },
         {
             "name": "upload_scores.py",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/langfuse/data_exporters/upload_scores.py",
+            "program": "${workspaceFolder}/lodgify/data_exporters/upload_scores.py",
             "cwd": "${workspaceFolder}",
             "justMyCode": true,
             "env": {
                 "PYTHONPATH": "${workspaceFolder}",
-                "MAGE_REPO_PATH": "/Users/denis.ergashbaev/Projects/mage-pipelines/langfuse"
+                "MAGE_REPO_PATH": "/Users/denis.ergashbaev/Projects/ai-mage-pipelines/lodgify"
             }
         },
         {
             "name": "load_traces.py",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/langfuse/data_loaders/load_traces.py",
+            "program": "${workspaceFolder}/lodgify/data_loaders/load_traces.py",
             "cwd": "${workspaceFolder}",
             "justMyCode": true,
             "env": {
                 "PYTHONPATH": "${workspaceFolder}",
-                "MAGE_REPO_PATH": "/Users/denis.ergashbaev/Projects/mage-pipelines/langfuse"
+                "MAGE_REPO_PATH": "/Users/denis.ergashbaev/Projects/ai-mage-pipelines/lodgify"
             }
         },
         {
             "name": "upload_traces.py",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/langfuse/data_exporters/upload_traces.py",
+            "program": "${workspaceFolder}/lodgify/data_exporters/upload_traces.py",
             "cwd": "${workspaceFolder}",
             "justMyCode": true,
             "env": {
                 "PYTHONPATH": "${workspaceFolder}",
-                "MAGE_REPO_PATH": "/Users/denis.ergashbaev/Projects/mage-pipelines/langfuse"
+                "MAGE_REPO_PATH": "/Users/denis.ergashbaev/Projects/ai-mage-pipelines/lodgify"
             }
         },
         {
             "name": "load_observations.py",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/langfuse/data_loaders/load_observations.py",
+            "program": "${workspaceFolder}/lodgify/data_loaders/load_observations.py",
             "cwd": "${workspaceFolder}",
             "justMyCode": true,
             "env": {
                 "PYTHONPATH": "${workspaceFolder}",
-                "MAGE_REPO_PATH": "/Users/denis.ergashbaev/Projects/mage-pipelines/langfuse"
+                "MAGE_REPO_PATH": "/Users/denis.ergashbaev/Projects/ai-mage-pipelines/lodgify"
             }
         },
         {
             "name": "upload_observations.py",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/langfuse/data_exporters/upload_observations.py",
+            "program": "${workspaceFolder}/lodgify/data_exporters/upload_observations.py",
             "cwd": "${workspaceFolder}",
             "justMyCode": true,
             "env": {
                 "PYTHONPATH": "${workspaceFolder}",
-                "MAGE_REPO_PATH": "/Users/denis.ergashbaev/Projects/mage-pipelines/langfuse"
+                "MAGE_REPO_PATH": "/Users/denis.ergashbaev/Projects/ai-mage-pipelines/lodgify"
             }
         }
     ]

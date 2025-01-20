@@ -1,5 +1,5 @@
 [project]
-name = "mage-pipelines"
+name = "ai-mage-pipelines"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -82,6 +82,6 @@ ignore = [
     "TRY300" # Consider moving this statement to an else block
 ]
 [tool.mypy]
-files = ["langfuse/data_loaders", "langfuse/data_exporters", "langfuse/utils"]
+files = ["lodgify/data_loaders", "lodgify/data_exporters", "lodgify/utils"]
 show_absolute_path = true
 check_untyped_defs = true
