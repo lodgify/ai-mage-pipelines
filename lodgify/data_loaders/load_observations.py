@@ -4,7 +4,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import pandas as pd
 from loguru import logger
 
-from langfuse_analytics_collection.utils import constants, utils
+from lodgify.utils.ai_assistant import constants, utils_langfuse
 
 if "data_loader" not in globals():
     from mage_ai.data_preparation.decorators import data_loader
@@ -16,7 +16,7 @@ def fetch_observations_for_trace(trace_id):
     params = {
         "traceId": trace_id,
     }
-    observations_data = utils.fetch_all_pages("observations", constants.DAYS_BACK, params)
+    observations_data = utils_langfuse.fetch_all_pages("observations", constants.DAYS_BACK, params)
 
     return [
         {

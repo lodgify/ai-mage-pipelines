@@ -3,7 +3,7 @@ import json
 import pandas as pd
 from loguru import logger
 
-from langfuse_analytics_collection.utils import constants, utils
+from lodgify.utils.ai_assistant import constants, utils_langfuse
 
 if "data_loader" not in globals():
     from mage_ai.data_preparation.decorators import data_loader
@@ -13,7 +13,7 @@ if "test" not in globals():
 
 @data_loader
 def load_traces(*args, **kwargs):
-    traces_data = utils.fetch_all_pages("traces", constants.DAYS_BACK)
+    traces_data = utils_langfuse.fetch_all_pages("traces", constants.DAYS_BACK)
 
     traces_dicts = [
         {

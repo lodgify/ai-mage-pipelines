@@ -1,35 +1,26 @@
-from os import path
+import os
 
+import pandas as pd
 from loguru import logger
 from mage_ai.io.config import ConfigFileLoader
 from mage_ai.io.postgres import Postgres
 from mage_ai.settings.repo import get_repo_path
 
-from langfuse_analytics_collection.utils import constants
-
-if "data_exporter" not in globals():
-    from mage_ai.data_preparation.decorators import data_exporter
+from lodgify.utils.ai_assistant import constants
 
 
-@data_exporter
-def export_data_to_postgres(data, **kwargs) -> None:
-    """Template for exporting data to a PostgreSQL database.
-    Specify your configuration settings in 'io_config.yaml'.
-
-    Docs: https://docs.mage.ai/design/data-loading#postgresql
-    """
-    # Debugging prints
+def export_data(data: pd.DataFrame, schema_name: str, table_name: str):
     logger.info(f"Type of data: {type(data)}")
 
     try:
-        config_profile = constants.CONFIG_MAPPER["io_config_profile_name"]
+        config_profile = constants.get_config_mapper()["io_config_profile_name"]
         # Additional debugging prints to verify DataFrame and config_profile
         logger.info(f"Extracted DataFrame: {data}")
         logger.info(f"Extracted config_profile: {config_profile}")
 
-        schema_name = "public"  # Specify the name of the schema to export data to
-        table_name = '"LangfuseScores"'  # Specify the name of the table to export data to
-        config_path = path.join(get_repo_path(), "io_config.yaml")
+        # schema_name = "public"  # Specify the name of the schema to export data to
+        # table_name = '"LangfuseScores"'  # Specify the name of the table to export data to
+        config_path = os.path.join(get_repo_path(), "io_config.yaml")
 
         logger.info(f"{data.shape=}")
         if data is not None and not data.empty:
@@ -47,11 +38,3 @@ def export_data_to_postgres(data, **kwargs) -> None:
                 )
     except Exception:
         logger.exception("An error occurred")
-
-
-if __name__ == "__main__":
-    logger.info("running __main__")
-    import pandas as pd
-
-    data = pd.read_pickle("scores.pkl")
-    export_data_to_postgres(data)

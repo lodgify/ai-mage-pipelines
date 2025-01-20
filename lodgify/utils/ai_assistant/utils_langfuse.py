@@ -10,11 +10,11 @@ from loguru import logger
 from mage_ai.data_preparation.shared.secrets import get_secret_value
 from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_fixed
 
-from langfuse_analytics_collection.utils import constants
+from lodgify.utils.ai_assistant import constants
 
 BASE_URL = "https://cloud.langfuse.com/api/public"
 
-secret_name = constants.CONFIG_MAPPER["secret_name"]
+secret_name = constants.get_config_mapper()["secret_name"]
 try:
     credentials = get_secret_value(secret_name)
 except AttributeError:
@@ -99,6 +99,7 @@ def fetch_all_pages(path: str, days_back: int, params: dict[str, Any] | None = N
     headers = {"Authorization": f"Basic {b64encode(credentials.encode()).decode()}", "Content-Type": "application/json"}
 
     start_date = datetime.now(timezone.utc) - timedelta(days=days_back)
+    # execution date
     if params is None:
         params = {}
     params["fromTimestamp"] = start_date.strftime("%Y-%m-%dT00:00:00Z")

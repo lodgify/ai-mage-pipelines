@@ -1,7 +1,7 @@
 import pandas as pd
 from loguru import logger
 
-from langfuse_analytics_collection.utils import constants, utils
+from lodgify.utils.ai_assistant import constants, utils_langfuse
 
 if "data_loader" not in globals():
     from mage_ai.data_preparation.decorators import data_loader
@@ -11,7 +11,7 @@ if "test" not in globals():
 
 @data_loader
 def load_scores(*args, **kwargs):
-    scores_data = utils.fetch_all_pages("scores", constants.DAYS_BACK)
+    scores_data = utils_langfuse.fetch_all_pages("scores", constants.DAYS_BACK)
     scores_dicts = [
         {
             "Id": score["id"],
