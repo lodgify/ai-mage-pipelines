@@ -9,7 +9,7 @@ blocks:
   language: python
   name: ai_assistant_load_scores
   retry_config: null
-  status: executed
+  status: failed
   timeout: null
   type: data_loader
   upstream_blocks: []
@@ -121,7 +121,9 @@ run_pipeline_in_one_process: false
 settings:
   triggers: null
 spark_config: {}
-tags: []
+tags:
+- AI
+- wip
 type: python
 uuid: ai_assistant_langfuse_import
 variables_dir: /Users/denis.ergashbaev/.mage_data/lodgify

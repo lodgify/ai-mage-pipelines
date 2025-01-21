@@ -1,5 +1,6 @@
 import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime
 
 import pandas as pd
 from loguru import logger
@@ -12,11 +13,11 @@ if "test" not in globals():
     from mage_ai.data_preparation.decorators import test
 
 
-def fetch_observations_for_trace(trace_id, **kwargs):
+def fetch_observations_for_trace(trace_id, start_from_date: datetime, end_date: datetime):
     params = {
         "traceId": trace_id,
     }
-    observations_data = utils_langfuse.fetch_all_pages("observations", constants.DAYS_BACK, params, **kwargs)
+    observations_data = utils_langfuse.fetch_all_pages("observations", start_from_date, end_date, params)
 
     return [
         {
@@ -54,17 +55,17 @@ def fetch_observations_for_trace(trace_id, **kwargs):
 @data_loader
 def load_observations(data: pd.DataFrame, *args, **kwargs):
     if data.empty:
-        logger.warning("Not loading observations, no traces found.")
+        logger.debug("Not loading observations, no traces found.")
         return pd.DataFrame()
 
     observations = []
     trace_ids = data["Id"].tolist()
-
+    start_from_date, end_date = utils_langfuse.calculate_start_and_end_dates(constants.DAYS_BACK, **kwargs)
     # we need to parallelize fetching so that it is not too slow. The reason is that
     # we can only fetch observations for a trace at a time (ie, not all the observations for all the traces at once)
     # not too high to respect API limits: https://langfuse.com/faq/all/api-limits
     with ThreadPoolExecutor(max_workers=8) as executor:
-        future_to_trace = {executor.submit(fetch_observations_for_trace, trace_id, **kwargs): trace_id for trace_id in trace_ids}
+        future_to_trace = {executor.submit(fetch_observations_for_trace, trace_id, start_from_date, end_date): trace_id for trace_id in trace_ids}
 
         for future in as_completed(future_to_trace):
             try:

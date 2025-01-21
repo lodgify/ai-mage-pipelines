@@ -2,7 +2,7 @@ import math
 import os
 from base64 import b64encode
 from datetime import datetime, timedelta, timezone
-from typing import Any
+from typing import Any, Literal
 
 import dotenv
 import requests
@@ -86,31 +86,46 @@ def make_request(url, headers, params):
         response.raise_for_status()
         return response
     except Exception:
-        logger.exception(f"Request failed: {url=}, {params=}")
+        logger.warning(f"Request failed: {url=}, {params=}")
         raise
 
-
-def fetch_all_pages(path: str, days_back: int, params: dict[str, Any] | None = None, **kwargs):
-    """
-    Fetches the data for multiple pages, up to the limit imposed by the given path,
-    starting from 'days_back' days ago until now (UTC).
-    Returns a list combining all pages of data.
-    """
-    headers = {"Authorization": f"Basic {b64encode(credentials.encode()).decode()}", "Content-Type": "application/json"}
-
+def calculate_start_and_end_dates(days_back: int, **kwargs) -> tuple[datetime, datetime]:
     # backfill-ready format: https://www.youtube.com/watch?v=V-wUccaafEo&ab_channel=Mage
-    start_date = kwargs.get("execution_date")
-    if start_date is not None:
-        start_date = start_date.date()
+    now_date = kwargs.get("execution_date")
+    if now_date is not None:
+        now_date = now_date.date()
     else:
         logger.warning("Execution date is not set, using current date (local environment)")
-        start_date = datetime.now(timezone.utc)
-    start_date = start_date - timedelta(days=days_back)
+        now_date = datetime.now(timezone.utc)
+    start_from_date = now_date - timedelta(days=days_back)
+    logger.info(f"Fetching data from {start_from_date} to {now_date}")
+    return start_from_date, now_date
+
+def fetch_all_pages(path: Literal["traces", "observations", "scores"],
+                    start_from_date: datetime, end_date: datetime, params: dict[str, Any] | None = None):
+    """
+    Fetches the data for multiple pages, up to the limit imposed by the given path,
+    starting from 'start_from_date' until 'end_date' (UTC).
+    Returns a list combining all pages of data.
+    """
     if params is None:
         params = {}
-    params["fromTimestamp"] = start_date.strftime("%Y-%m-%dT00:00:00Z")
+    match path:
+        case "traces" | "scores":
+            # explanation of parameters from https://api.reference.langfuse.com/#get-/api/public/traces
+            # traces: Optional filter to only include traces with a trace.timestamp on or after a certain datetime (ISO 8601)
+            # # explanation of parameters from https://api.reference.langfuse.com/#get-/api/public/scores
+            # scores: Optional filter to only include scores created on or after a certain datetime (ISO 8601)
+            params["fromTimestamp"] = start_from_date.strftime("%Y-%m-%dT00:00:00Z")
+            params["toTimestamp"] = end_date.strftime("%Y-%m-%dT00:00:00Z")
+        case "observations":
+            # explanation of parameters from https://api.reference.langfuse.com/#get-/api/public/observations
+            # Retrieve only observations with a start_time or or after this datetime (ISO 8601).
+            params["fromStartTime"] = start_from_date.strftime("%Y-%m-%dT00:00:00Z")
+            params["toStartTime"] = end_date.strftime("%Y-%m-%dT00:00:00Z")
     params["limit"] = 100  # API does not allow a higher limit (tested via experimentation)
 
+    headers = {"Authorization": f"Basic {b64encode(credentials.encode()).decode()}", "Content-Type": "application/json"}
     page = 1
     all_data = []
     while True:
@@ -118,16 +133,17 @@ def fetch_all_pages(path: str, days_back: int, params: dict[str, Any] | None = N
         logger.debug(f"Fetching page {page}")
         response = make_request(f"{BASE_URL}/{path}", headers, params)
 
-        if response.status_code == 200:
-            data = response.json()
-            extracted_data = data["data"]
-            if not extracted_data:
-                break
-            all_data.extend(extracted_data)
-            page += 1
-        else:
+        if response.status_code != 200:
             logger.error(f"Error fetching page {page}: {response.status_code} {response.text}")
             response.raise_for_status()
+
+        data = response.json()
+        extracted_data = data["data"]
+        if not extracted_data:
+            break
+        all_data.extend(extracted_data)
+        page += 1
+
 
     logger.debug(f"Total pages: {page}. Total data: {len(all_data)}")
     return all_data

@@ -13,7 +13,8 @@ if "test" not in globals():
 
 @data_loader
 def load_traces(*args, **kwargs):
-    traces_data = utils_langfuse.fetch_all_pages("traces", constants.DAYS_BACK, kwargs)
+    start_from_date, end_date = utils_langfuse.calculate_start_and_end_dates(constants.DAYS_BACK, **kwargs)
+    traces_data = utils_langfuse.fetch_all_pages("traces", start_from_date, end_date)
 
     traces_dicts = [
         {

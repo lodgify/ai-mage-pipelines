@@ -26,10 +26,6 @@ format: # Run format
 typecheck: # Run mypy check
 	uv run mypy
 
-.PHONY: export-requirements
-export-requirements: # Export requirements.txt
-	uv pip compile pyproject.toml -o requirements.txt
-
 .PHONY: check
 check: lint format typecheck  # Run both lint, format, and typecheck
 
