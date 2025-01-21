@@ -29,6 +29,10 @@ typecheck: # Run mypy check
 .PHONY: check
 check: lint format typecheck  # Run both lint, format, and typecheck
 
+.PHONY: clear-cache
+clear-cache:
+	rm -rf lodgify/.file_versions .ruff_cache .mypy_cache **/__pycache__
+
 
 
 

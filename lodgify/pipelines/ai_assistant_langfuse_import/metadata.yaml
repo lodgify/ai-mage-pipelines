@@ -96,7 +96,7 @@ blocks:
   language: python
   name: ai_assistant_save_observations
   retry_config: null
-  status: executed
+  status: failed
   timeout: null
   type: data_exporter
   upstream_blocks:
@@ -126,5 +126,5 @@ tags:
 - wip
 type: python
 uuid: ai_assistant_langfuse_import
-variables_dir: /Users/denis.ergashbaev/.mage_data/lodgify
+variables_dir: /Users/denis.ergashbaev/.mage_data/lodgify # /home/src/mage_data/lodgify
 widgets: []

@@ -153,5 +153,4 @@ def fetch_all_pages(
         all_data.extend(extracted_data)
         page += 1
 
-    logger.debug(f"Total pages: {page}. Total data: {len(all_data)}")
     return all_data
