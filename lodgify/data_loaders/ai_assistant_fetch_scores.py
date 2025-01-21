@@ -37,6 +37,7 @@ def test_output(output, *args) -> None:
 
 
 if __name__ == "__main__":
+    # this is only for testing as a script locally, mage uses decorators to run the code
     logger.debug("running __main__")
     scores_df = load_scores()
     scores_df.to_pickle("scores.pkl")

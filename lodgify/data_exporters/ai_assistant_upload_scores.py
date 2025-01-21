@@ -13,6 +13,7 @@ def export_data_to_postgres(data: pd.DataFrame, **kwargs) -> None:
 
 
 if __name__ == "__main__":
+    # this is only for testing as a script locally, mage uses decorators to run the code
     logger.debug("running __main__")
     import pandas as pd
 

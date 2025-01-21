@@ -89,6 +89,7 @@ def make_request(url, headers, params):
         logger.warning(f"Request failed: {url=}, {params=}")
         raise
 
+
 def calculate_start_and_end_dates(days_back: int, **kwargs) -> tuple[str, str]:
     # backfill-ready format: https://www.youtube.com/watch?v=V-wUccaafEo&ab_channel=Mage
     now_date = kwargs.get("execution_date")
@@ -98,11 +99,18 @@ def calculate_start_and_end_dates(days_back: int, **kwargs) -> tuple[str, str]:
         logger.warning("Execution date is not set, using current date (local environment)")
         now_date = datetime.now(timezone.utc)
     start_from_date = now_date - timedelta(days=days_back)
-    logger.info(f"Fetching data from {start_from_date} to {now_date}")
-    return start_from_date.strftime("%Y-%m-%dT00:00:00Z"), now_date.strftime("%Y-%m-%dT00:00:00Z")
+    start_from_date_str = start_from_date.strftime("%Y-%m-%dT00:00:00Z")
+    end_date_str = now_date.strftime("%Y-%m-%dT00:00:00Z")
+    logger.info(f"Fetching data from {start_from_date_str} to {end_date_str}")
+    return start_from_date_str, end_date_str
 
-def fetch_all_pages(path: Literal["traces", "observations", "scores"],
-                    start_from_date: str, end_date: str, params: dict[str, Any] | None = None):
+
+def fetch_all_pages(
+    path: Literal["traces", "observations", "scores"],
+    start_from_date: str,
+    end_date: str,
+    params: dict[str, Any] | None = None,
+):
     """
     Fetches the data for multiple pages, up to the limit imposed by the given path,
     starting from 'start_from_date' until 'end_date' (UTC).
@@ -130,7 +138,8 @@ def fetch_all_pages(path: Literal["traces", "observations", "scores"],
     all_data = []
     while True:
         params["page"] = page
-        logger.debug(f"Fetching page {page}")
+        if page % 10 == 0:
+            logger.debug(f"Fetching page {page}")
         response = make_request(f"{BASE_URL}/{path}", headers, params)
 
         if response.status_code != 200:
@@ -143,7 +152,6 @@ def fetch_all_pages(path: Literal["traces", "observations", "scores"],
             break
         all_data.extend(extracted_data)
         page += 1
-
 
     logger.debug(f"Total pages: {page}. Total data: {len(all_data)}")
     return all_data

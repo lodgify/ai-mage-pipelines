@@ -7,32 +7,32 @@ blocks:
   executor_type: local_python
   has_callback: false
   language: python
-  name: ai_assistant_load_scores
+  name: ai_assistant_fetch_scores
   retry_config: null
   status: executed
   timeout: null
   type: data_loader
   upstream_blocks: []
-  uuid: ai_assistant_load_scores
+  uuid: ai_assistant_fetch_scores
 - all_upstream_blocks_executed: true
   color: null
   configuration:
-    file_path: data_exporters/ai_assistant_upload_scores.py
+    file_path: data_exporters/ai_assistant_save_scores.py
     file_source:
-      path: data_exporters/ai_assistant_upload_scores.py
+      path: data_exporters/ai_assistant_save_scores.py
   downstream_blocks: []
   executor_config: null
   executor_type: local_python
   has_callback: false
   language: python
-  name: ai_assistant_upload_scores
+  name: ai_assistant_save_scores
   retry_config: null
   status: executed
   timeout: null
   type: data_exporter
   upstream_blocks:
-  - ai_assistant_load_scores
-  uuid: ai_assistant_upload_scores
+  - ai_assistant_fetch_scores
+  uuid: ai_assistant_save_scores
 - all_upstream_blocks_executed: true
   color: null
   configuration: {}
@@ -41,32 +41,32 @@ blocks:
   executor_type: local_python
   has_callback: false
   language: python
-  name: ai_assistant_load_traces
+  name: ai_assistant_fetch_traces
   retry_config: null
   status: executed
   timeout: null
   type: data_loader
   upstream_blocks: []
-  uuid: ai_assistant_load_traces
+  uuid: ai_assistant_fetch_traces
 - all_upstream_blocks_executed: true
   color: null
   configuration:
-    file_path: data_exporters/ai_assistant_upload_traces.py
+    file_path: data_exporters/ai_assistant_save_traces.py
     file_source:
-      path: data_exporters/ai_assistant_upload_traces.py
+      path: data_exporters/ai_assistant_save_traces.py
   downstream_blocks: []
   executor_config: null
   executor_type: local_python
   has_callback: false
   language: python
-  name: ai_assistant_upload_traces
+  name: ai_assistant_save_traces
   retry_config: null
   status: executed
   timeout: null
   type: data_exporter
   upstream_blocks:
-  - ai_assistant_load_traces
-  uuid: ai_assistant_upload_traces
+  - ai_assistant_fetch_traces
+  uuid: ai_assistant_save_traces
 - all_upstream_blocks_executed: true
   color: null
   configuration: {}
@@ -75,33 +75,33 @@ blocks:
   executor_type: local_python
   has_callback: false
   language: python
-  name: ai_assistant_load_observations
+  name: ai_assistant_fetch_observations
   retry_config: null
-  status: failed
+  status: executed
   timeout: null
   type: data_loader
   upstream_blocks:
-  - ai_assistant_load_traces
-  uuid: ai_assistant_load_observations
-- all_upstream_blocks_executed: false
+  - ai_assistant_fetch_traces
+  uuid: ai_assistant_fetch_observations
+- all_upstream_blocks_executed: true
   color: null
   configuration:
-    file_path: data_exporters/ai_assistant_upload_observations.py
+    file_path: data_exporters/ai_assistant_fetch_observations.py
     file_source:
-      path: data_exporters/ai_assistant_upload_observations.py
+      path: data_exporters/ai_assistant_fetch_observations.py
   downstream_blocks: []
   executor_config: null
   executor_type: local_python
   has_callback: false
   language: python
-  name: ai_assistant_upload_observations
+  name: ai_assistant_save_observations
   retry_config: null
-  status: failed
+  status: executed
   timeout: null
   type: data_exporter
   upstream_blocks:
-  - ai_assistant_load_observations
-  uuid: ai_assistant_upload_observations
+  - ai_assistant_fetch_observations
+  uuid: ai_assistant_save_observations
 cache_block_output_in_memory: false
 callbacks: []
 concurrency_config: {}

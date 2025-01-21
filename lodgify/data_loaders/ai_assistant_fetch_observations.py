@@ -63,11 +63,19 @@ def load_observations(data: pd.DataFrame, *args, **kwargs):
     # we need to parallelize fetching so that it is not too slow. The reason is that
     # we can only fetch observations for a trace at a time (ie, not all the observations for all the traces at once)
     # not too high to respect API limits: https://langfuse.com/faq/all/api-limits
+    processed_count = 0
     with ThreadPoolExecutor(max_workers=8) as executor:
-        future_to_trace = {executor.submit(fetch_observations_for_trace, trace_id, start_from_date, end_date): trace_id for trace_id in trace_ids}
+        future_to_trace = {
+            executor.submit(fetch_observations_for_trace, trace_id, start_from_date, end_date): trace_id
+            for trace_id in trace_ids
+        }
 
         for future in as_completed(future_to_trace):
             try:
+                processed_count += 1
+                if processed_count % 10 == 0:
+                    trace_id = future_to_trace[future]
+                    logger.debug(f"Processing {processed_count}th trace (out of {len(trace_ids)})")
                 trace_obs_dicts = future.result()
                 if trace_obs_dicts:
                     observations.extend(trace_obs_dicts)
@@ -86,6 +94,7 @@ def test_output(output, *args) -> None:
 
 
 if __name__ == "__main__":
+    # this is only for testing as a script locally, mage uses decorators to run the code
     logger.debug("running __main__")
     traces_df = pd.read_pickle("traces.pkl")
     observations_df = load_observations(traces_df)
