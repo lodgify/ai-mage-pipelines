@@ -9,7 +9,7 @@ blocks:
   language: python
   name: ai_assistant_load_scores
   retry_config: null
-  status: failed
+  status: executed
   timeout: null
   type: data_loader
   upstream_blocks: []
@@ -96,7 +96,7 @@ blocks:
   language: python
   name: ai_assistant_upload_observations
   retry_config: null
-  status: executed
+  status: failed
   timeout: null
   type: data_exporter
   upstream_blocks:

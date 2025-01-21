@@ -89,7 +89,7 @@ def make_request(url, headers, params):
         logger.warning(f"Request failed: {url=}, {params=}")
         raise
 
-def calculate_start_and_end_dates(days_back: int, **kwargs) -> tuple[datetime, datetime]:
+def calculate_start_and_end_dates(days_back: int, **kwargs) -> tuple[str, str]:
     # backfill-ready format: https://www.youtube.com/watch?v=V-wUccaafEo&ab_channel=Mage
     now_date = kwargs.get("execution_date")
     if now_date is not None:
@@ -99,10 +99,10 @@ def calculate_start_and_end_dates(days_back: int, **kwargs) -> tuple[datetime, d
         now_date = datetime.now(timezone.utc)
     start_from_date = now_date - timedelta(days=days_back)
     logger.info(f"Fetching data from {start_from_date} to {now_date}")
-    return start_from_date, now_date
+    return start_from_date.strftime("%Y-%m-%dT00:00:00Z"), now_date.strftime("%Y-%m-%dT00:00:00Z")
 
 def fetch_all_pages(path: Literal["traces", "observations", "scores"],
-                    start_from_date: datetime, end_date: datetime, params: dict[str, Any] | None = None):
+                    start_from_date: str, end_date: str, params: dict[str, Any] | None = None):
     """
     Fetches the data for multiple pages, up to the limit imposed by the given path,
     starting from 'start_from_date' until 'end_date' (UTC).
@@ -116,13 +116,13 @@ def fetch_all_pages(path: Literal["traces", "observations", "scores"],
             # traces: Optional filter to only include traces with a trace.timestamp on or after a certain datetime (ISO 8601)
             # # explanation of parameters from https://api.reference.langfuse.com/#get-/api/public/scores
             # scores: Optional filter to only include scores created on or after a certain datetime (ISO 8601)
-            params["fromTimestamp"] = start_from_date.strftime("%Y-%m-%dT00:00:00Z")
-            params["toTimestamp"] = end_date.strftime("%Y-%m-%dT00:00:00Z")
+            params["fromTimestamp"] = start_from_date
+            params["toTimestamp"] = end_date
         case "observations":
             # explanation of parameters from https://api.reference.langfuse.com/#get-/api/public/observations
             # Retrieve only observations with a start_time or or after this datetime (ISO 8601).
-            params["fromStartTime"] = start_from_date.strftime("%Y-%m-%dT00:00:00Z")
-            params["toStartTime"] = end_date.strftime("%Y-%m-%dT00:00:00Z")
+            params["fromStartTime"] = start_from_date
+            params["toStartTime"] = end_date
     params["limit"] = 100  # API does not allow a higher limit (tested via experimentation)
 
     headers = {"Authorization": f"Basic {b64encode(credentials.encode()).decode()}", "Content-Type": "application/json"}
