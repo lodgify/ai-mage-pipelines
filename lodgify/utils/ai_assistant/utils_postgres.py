@@ -10,8 +10,11 @@ from lodgify.utils.ai_assistant import constants
 
 
 def export_data(data: pd.DataFrame, schema_name: str, table_name: str):
-    if not data or data.empty:
-        logger.warning("Data is None or empty, skipping saving to postgres")
+    if not isinstance(data, pd.DataFrame):
+        logger.warning("Data is not a pandas DataFrame, skipping saving to postgres")
+        return
+    if data.empty:
+        logger.warning("Data is empty, skipping saving to postgres")
         return
 
     try:
