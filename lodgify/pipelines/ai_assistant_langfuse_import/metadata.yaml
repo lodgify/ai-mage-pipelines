@@ -86,9 +86,9 @@ blocks:
 - all_upstream_blocks_executed: true
   color: null
   configuration:
-    file_path: data_exporters/ai_assistant_fetch_observations.py
+    file_path: data_exporters/ai_assistant_save_observations.py
     file_source:
-      path: data_exporters/ai_assistant_fetch_observations.py
+      path: data_exporters/ai_assistant_save_observations.py
   downstream_blocks: []
   executor_config: null
   executor_type: local_python
@@ -96,7 +96,7 @@ blocks:
   language: python
   name: ai_assistant_save_observations
   retry_config: null
-  status: failed
+  status: executed
   timeout: null
   type: data_exporter
   upstream_blocks:
@@ -126,5 +126,5 @@ tags:
 - wip
 type: python
 uuid: ai_assistant_langfuse_import
-variables_dir: /Users/denis.ergashbaev/.mage_data/lodgify # /home/src/mage_data/lodgify
+variables_dir: /Users/denis.ergashbaev/.mage_data/lodgify
 widgets: []
