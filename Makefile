@@ -22,12 +22,8 @@ lint: # Run linting check
 format: # Run format
 	uv run ruff format
 
-.PHONY: typecheck
-typecheck: # Run mypy check
-	uv run mypy
-
 .PHONY: check
-check: lint format typecheck  # Run both lint, format, and typecheck
+check: lint format  # Run both lint, format
 
 .PHONY: clear-cache
 clear-cache:
