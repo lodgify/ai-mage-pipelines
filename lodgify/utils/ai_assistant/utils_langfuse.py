@@ -1,7 +1,7 @@
 import math
 import os
 from base64 import b64encode
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, Literal
 
 import dotenv
@@ -92,8 +92,8 @@ def make_request(url, headers, params):
         response = requests.get(url, headers=headers, params=params, timeout=10)
         response.raise_for_status()
         return response
-    except Exception:
-        logger.warning(f"Request failed: {url=}, {params=}")
+    except Exception as e:
+        logger.warning(f"Request failed: {url=}, {params=}, {e=}")
         raise
 
 
@@ -101,10 +101,9 @@ def calculate_start_and_end_dates(days_back: int, **kwargs) -> tuple[str, str]:
     # backfill-ready format: https://www.youtube.com/watch?v=V-wUccaafEo&ab_channel=Mage
     now_date = kwargs.get("execution_date")
     if now_date is not None:
-        # Just get the date component without timezone conversion
         logger.info(f"Using initial {now_date=}")
         now_date = now_date.date()
-        logger.info(f"After conversion {now_date=}")
+        logger.info(f"After conversion to date only {now_date=}")
     else:
         logger.warning("Execution date is not set, using current date (local environment)")
         now_date = datetime.now(datetime.now().astimezone().tzinfo).date()

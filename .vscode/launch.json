@@ -2,10 +2,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "ai_assistant_load_scores.py",
+            "name": "ai_assistant_fetch_scores.py",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/lodgify/data_loaders/ai_assistant_load_scores.py",  // Updated path
+            "program": "${workspaceFolder}/lodgify/data_loaders/ai_assistant_fetch_scores.py",  // Updated path
             "cwd": "${workspaceFolder}",
             "justMyCode": true,
             "env": {
@@ -14,10 +14,10 @@
             }
         },
         {
-            "name": "ai_assistant_upload_scores.py",
+            "name": "ai_assistant_upfetch_scores.py",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/lodgify/data_exporters/ai_assistant_upload_scores.py",
+            "program": "${workspaceFolder}/lodgify/data_exporters/ai_assistant_upfetch_scores.py",
             "cwd": "${workspaceFolder}",
             "justMyCode": true,
             "env": {
@@ -26,10 +26,10 @@
             }
         },
         {
-            "name": "ai_assistant_load_traces.py",
+            "name": "ai_assistant_fetch_traces.py",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/lodgify/data_loaders/ai_assistant_load_traces.py",
+            "program": "${workspaceFolder}/lodgify/data_loaders/ai_assistant_fetch_traces.py",
             "cwd": "${workspaceFolder}",
             "justMyCode": true,
             "env": {
@@ -38,10 +38,10 @@
             }
         },
         {
-            "name": "ai_assistant_upload_traces.py",
+            "name": "ai_assistant_upfetch_traces.py",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/lodgify/data_exporters/ai_assistant_upload_traces.py",
+            "program": "${workspaceFolder}/lodgify/data_exporters/ai_assistant_upfetch_traces.py",
             "cwd": "${workspaceFolder}",
             "justMyCode": true,
             "env": {
@@ -50,10 +50,10 @@
             }
         },
         {
-            "name": "ai_assistant_load_observations.py",
+            "name": "ai_assistant_fetch_observations.py",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/lodgify/data_loaders/ai_assistant_load_observations.py",
+            "program": "${workspaceFolder}/lodgify/data_loaders/ai_assistant_fetch_observations.py",
             "cwd": "${workspaceFolder}",
             "justMyCode": true,
             "env": {
@@ -62,10 +62,10 @@
             }
         },
         {
-            "name": "ai_assistant_upload_observations.py",
+            "name": "ai_assistant_upfetch_observations.py",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/lodgify/data_exporters/ai_assistant_upload_observations.py",
+            "program": "${workspaceFolder}/lodgify/data_exporters/ai_assistant_upfetch_observations.py",
             "cwd": "${workspaceFolder}",
             "justMyCode": true,
             "env": {
