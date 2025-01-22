@@ -1,7 +1,7 @@
 import math
 import os
 from base64 import b64encode
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from typing import Any, Literal
 
 import dotenv

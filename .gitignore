@@ -11,3 +11,4 @@ wheels/
 .env
 *.pkl
 .DS_Store
+.mypy_cache
