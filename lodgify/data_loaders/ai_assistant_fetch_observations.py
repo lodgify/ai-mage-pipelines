@@ -58,6 +58,7 @@ def load_observations(data: pd.DataFrame, *args, **kwargs):
         return pd.DataFrame()
 
     observations = []
+    logger.info(f"Run params {args=}, {kwargs=}")
     start_from_date, end_date = utils_langfuse.calculate_start_and_end_dates(constants.DAYS_BACK, **kwargs)
     logger.info(f"Fetching data {start_from_date=}, {end_date=}")
     trace_ids = data["Id"].tolist()
@@ -74,7 +75,9 @@ def load_observations(data: pd.DataFrame, *args, **kwargs):
         for future in as_completed(future_to_trace):
             try:
                 processed_count += 1
-                if processed_count % 10 == 0:
+                nth_trace = 100
+                logger.info(f"Will be logging every {nth_trace} traces")
+                if processed_count % nth_trace == 0:
                     trace_id = future_to_trace[future]
                     logger.debug(f"Processing {processed_count}th trace (out of {len(trace_ids)})")
                 trace_obs_dicts = future.result()
