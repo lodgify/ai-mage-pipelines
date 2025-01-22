@@ -45,20 +45,26 @@ def wait_time(retry_state):
     Returns the primary wait time, checking if status_code == 429.
     Uses the 'Retry-After' header if available. Otherwise, defaults to 1 second.
     """
-    default_wait = 5  # seconds
     if (
         hasattr(retry_state.outcome, "exception")
         and hasattr(retry_state.outcome.exception(), "response")
-        and retry_state.outcome.exception().response is not None
+        and retry_state.outcome.exception().response is not None  # that None happened in logs once
         and retry_state.outcome.exception().response.status_code == 429
     ):
-        val = get_retry_after(retry_state.outcome.exception().response) or default_wait
+        val = get_retry_after(retry_state.outcome.exception().response)
+        if val is None:
+            logger.warning(f"No Retry-After header found, using exponential backoff for {retry_state.attempt_number=}")
+            # exponential backoff with base 4, values for 1, 2, 3, 4, 5 attempts:
+            # 4^0 = 1, 4^1 = 4, 4^2 = 16, 4^3 = 64, 4^4 = 256 seconds
+            val = 4 ** (retry_state.attempt_number - 1)
     else:
         """
         Returns the fallback wait time, using exponential backoff
         if the Retry-After header isn't applicable.
         """
-        val = 2 ** (retry_state.attempt_number - 1)
+        val = 4 ** (retry_state.attempt_number - 1)
+        # exponential backoff with base 4, values for 1, 2, 3, 4, 5 attempts:
+        # 4^0 = 1, 4^1 = 4, 4^2 = 16, 4^3 = 64, 4^4 = 256 seconds
     return wait_fixed(val)(retry_state)
 
 
@@ -75,7 +81,7 @@ def log_before_sleep(retry_state):
 @retry(
     stop=stop_after_attempt(attempt_count),
     wait=wait_time,
-    retry=retry_if_exception_type(requests.exceptions.RequestException),
+    retry=retry_if_exception_type((requests.exceptions.RequestException, Exception)),
     before_sleep=log_before_sleep,
 )
 def make_request(url, headers, params):
