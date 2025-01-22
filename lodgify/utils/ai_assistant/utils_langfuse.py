@@ -101,7 +101,6 @@ def calculate_start_and_end_dates(days_back: int, **kwargs) -> tuple[str, str]:
     start_from_date = now_date - timedelta(days=days_back)
     start_from_date_str = start_from_date.strftime("%Y-%m-%dT00:00:00Z")
     end_date_str = now_date.strftime("%Y-%m-%dT00:00:00Z")
-    logger.info(f"Fetching data from {start_from_date_str} to {end_date_str}")
     return start_from_date_str, end_date_str
 
 

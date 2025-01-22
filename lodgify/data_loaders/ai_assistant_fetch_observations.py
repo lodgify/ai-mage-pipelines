@@ -59,6 +59,7 @@ def load_observations(data: pd.DataFrame, *args, **kwargs):
 
     observations = []
     start_from_date, end_date = utils_langfuse.calculate_start_and_end_dates(constants.DAYS_BACK, **kwargs)
+    logger.info(f"Fetching data {start_from_date=}, {end_date=}")
     trace_ids = data["Id"].tolist()
     # we need to parallelize fetching so that it is not too slow. The reason is that
     # we can only fetch observations for a trace at a time (ie, not all the observations for all the traces at once)

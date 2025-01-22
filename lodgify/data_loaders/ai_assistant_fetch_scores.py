@@ -12,6 +12,7 @@ if "test" not in globals():
 @data_loader
 def load_scores(*args, **kwargs):
     start_from_date, end_date = utils_langfuse.calculate_start_and_end_dates(constants.DAYS_BACK, **kwargs)
+    logger.info(f"Fetching data {start_from_date=}, {end_date=}")
     scores_data = utils_langfuse.fetch_all_pages("scores", start_from_date, end_date)
     scores_dicts = [
         {
