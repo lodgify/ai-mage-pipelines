@@ -2,9 +2,9 @@ import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import pandas as pd
-from loguru import logger
 
 from lodgify.utils.ai_assistant import constants, utils_langfuse
+from lodgify.utils.ai_assistant.logger import logger
 
 if "data_loader" not in globals():
     from mage_ai.data_preparation.decorators import data_loader
@@ -71,12 +71,12 @@ def load_observations(data: pd.DataFrame, *args, **kwargs):
             executor.submit(fetch_observations_for_trace, trace_id, start_from_date, end_date): trace_id
             for trace_id in trace_ids
         }
+        nth_trace = 100
+        logger.info(f"Will be logging completion of every {nth_trace=}")
 
         for future in as_completed(future_to_trace):
             try:
                 processed_count += 1
-                nth_trace = 100
-                logger.info(f"Will be logging every {nth_trace} traces")
                 if processed_count % nth_trace == 0:
                     trace_id = future_to_trace[future]
                     logger.debug(f"Processing {processed_count}th trace (out of {len(trace_ids)})")

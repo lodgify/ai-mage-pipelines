@@ -1,9 +1,9 @@
 import json
 
 import pandas as pd
-from loguru import logger
 
 from lodgify.utils.ai_assistant import constants, utils_langfuse
+from lodgify.utils.ai_assistant.logger import logger
 
 if "data_loader" not in globals():
     from mage_ai.data_preparation.decorators import data_loader

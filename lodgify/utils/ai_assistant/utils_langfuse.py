@@ -6,11 +6,11 @@ from typing import Any, Literal
 
 import dotenv
 import requests
-from loguru import logger
 from mage_ai.data_preparation.shared.secrets import get_secret_value
 from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_fixed
 
 from lodgify.utils.ai_assistant import constants
+from lodgify.utils.ai_assistant.logger import logger
 
 BASE_URL = "https://cloud.langfuse.com/api/public"
 
@@ -49,6 +49,7 @@ def wait_time(retry_state):
     if (
         hasattr(retry_state.outcome, "exception")
         and hasattr(retry_state.outcome.exception(), "response")
+        and retry_state.outcome.exception().response is not None
         and retry_state.outcome.exception().response.status_code == 429
     ):
         val = get_retry_after(retry_state.outcome.exception().response) or default_wait
@@ -94,11 +95,18 @@ def calculate_start_and_end_dates(days_back: int, **kwargs) -> tuple[str, str]:
     # backfill-ready format: https://www.youtube.com/watch?v=V-wUccaafEo&ab_channel=Mage
     now_date = kwargs.get("execution_date")
     if now_date is not None:
+        # Just get the date component without timezone conversion
+        logger.info(f"Using initial {now_date=}")
         now_date = now_date.date()
+        logger.info(f"After conversion {now_date=}")
     else:
         logger.warning("Execution date is not set, using current date (local environment)")
-        now_date = datetime.now(timezone.utc)
+        now_date = datetime.now(datetime.now().astimezone().tzinfo).date()
+
+    # not using timezone UTC here because we want to use machine local time first
     start_from_date = now_date - timedelta(days=days_back)
+    # now, that we have calcualted based on the local timezone
+    # we specify the date in UTC for langfuse
     start_from_date_str = start_from_date.strftime("%Y-%m-%dT00:00:00Z")
     end_date_str = now_date.strftime("%Y-%m-%dT00:00:00Z")
     return start_from_date_str, end_date_str

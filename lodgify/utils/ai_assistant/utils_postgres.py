@@ -1,12 +1,12 @@
 import os
 
 import pandas as pd
-from loguru import logger
 from mage_ai.io.config import ConfigFileLoader
 from mage_ai.io.postgres import Postgres
 from mage_ai.settings.repo import get_repo_path
 
 from lodgify.utils.ai_assistant import constants
+from lodgify.utils.ai_assistant.logger import logger
 
 
 def export_data(data: pd.DataFrame, schema_name: str, table_name: str):

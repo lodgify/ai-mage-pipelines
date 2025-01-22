@@ -1,6 +1,5 @@
-from loguru import logger
-
 from lodgify.utils.ai_assistant import utils_postgres
+from lodgify.utils.ai_assistant.logger import logger
 
 if "data_exporter" not in globals():
     from mage_ai.data_preparation.decorators import data_exporter
