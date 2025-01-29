@@ -7,6 +7,23 @@ ai_assistant_internal_platform_integration_readwrite:
   POSTGRES_HOST: localhost
   POSTGRES_PORT: 5432
   lower_case: false
+
+ai_tools_internal_platform_live_readwrite:
+  #POSTGRES_CONNECT_TIMEOUT: 10
+  POSTGRES_DBNAME: lodgify-ai-tools-platform-live
+  POSTGRES_USER: lodgify-ai-tools-platform-integration
+  POSTGRES_PASSWORD:
+  POSTGRES_HOST:
+  POSTGRES_PORT: 5432
+  lower_case: false
+ai_tools_internal_platform_integration_readwrite:
+  #POSTGRES_CONNECT_TIMEOUT: 10
+  POSTGRES_DBNAME: lodgify-ai-tools-platform-integration
+  POSTGRES_USER: lodgify-ai-tools-platform-integration
+  POSTGRES_PASSWORD:
+  POSTGRES_HOST:
+  POSTGRES_PORT: 5432
+  lower_case: false
 default:
   # Default profile created for data IO access.
   # Add your credentials for the source you use, and delete the rest.
@@ -129,7 +146,7 @@ default:
     password: mage1337                        # Optional
     port: 8080
     schema: core_data
-    session_properties:                       # Optional
+    session_properties: # Optional
       acc01.optimize_locality_enabled: false
       optimize_hash_generation: true
     source: trino-cli                         # Optional
